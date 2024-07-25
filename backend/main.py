@@ -2,10 +2,11 @@ from flask import request, jsonify
 from config import app, db
 from models import Contact
 
+
 @app.route("/contacts", methods=["GET"])
 def get_contacts():
     contacts = Contact.query.all()
-    json_contacts = list(map(lambda x: x.to_json, contacts))
+    json_contacts = list(map(lambda x: x.to_json(), contacts))
     return jsonify({"contacts": json_contacts})
 
 
@@ -33,7 +34,7 @@ def create_contact():
 
 @app.route("/update_contact/<int:user_id>", methods=["PUT"])
 def update_contact(user_id):
-    contact = Contact.query.get(user_id)
+    contact = db.session.get(Contact,user_id)
     if not contact:
         return jsonify({"message": "User not found"}), 404
     
